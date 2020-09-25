@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="HandheldFriendly" content="True" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<meta name="generator" content="Hugo 0.75.1" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/favicon-16x16.png" />
+<link rel="manifest" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/site.webmanifest" />
+<link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/safari-pinned-tab.svg" color="#8aa2d3" />
+<link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/amzrk2/cdn-stcapi@1/favicons/favicon.ico" />
+<meta name="theme-color" content="#ffffff" />
+
+
+<title>Lnmp-with-docker-on-Mac - Be Water, My friend</title>
+
+
+<meta name="author" content="DSRKafuU" />
+
+
+<meta name="description" content="Github Pages with hugo" />
+
+
+<meta name="keywords" content="github, hugo" />
+
+<meta property="og:title" content="Lnmp-with-docker-on-Mac" />
+<meta property="og:description" content="Github Pages with hugo" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wangyaoxu.github.io/post/lnmp-with-docker-on-mac/" />
+<meta property="og:image" content="https://wangyaoxu.github.io/img/og.png"/>
+<meta property="article:published_time" content="2020-09-09T00:00:00+08:00" />
+<meta property="article:modified_time" content="2020-09-09T00:00:00+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wangyaoxu.github.io/img/og.png"/>
+
+<meta name="twitter:title" content="Lnmp-with-docker-on-Mac"/>
+<meta name="twitter:description" content="Github Pages with hugo"/>
+
+
+
+<style>
+    @media (prefers-color-scheme: dark) {
+        body[data-theme='auto'] img {
+            filter: brightness(60%);
+        }
+    }
+
+    body[data-theme='dark'] img {
+        filter: brightness(60%);
+    }
+</style>
+
+
+
+<link rel="stylesheet" href="https://wangyaoxu.github.io/assets/css/fuji.min.css" />
+
+
+
+
+
+</head>
+
+<body data-theme="auto">
+    <script data-cfasync="false">
+  
+  var fujiThemeData = localStorage.getItem('fuji_data-theme');
+  
+  if (!fujiThemeData) {
+    localStorage.setItem('fuji_data-theme', 'auto');
+  } else {
+    
+    if (fujiThemeData !== 'auto') {
+      document.body.setAttribute('data-theme', fujiThemeData === 'dark' ? 'dark' : 'light');
+    }
+  }
+</script>
+
+    <header>
+    <div class="container-lg clearfix">
+        <div class="col-12 header">
+            <a class="title-main" href="https://wangyaoxu.github.io">Be Water, My friend</a>
+            
+            <span class="title-sub">peace &amp; love</span>
+            
+        </div>
+    </div>
+</header>
+
+    <main>
+        <div class="container-lg clearfix">
+            
+            <div class="col-12 col-md-9 float-left content">
+                
+<article>
+    
+    <h2 class="post-item post-title">
+        <a href="https://wangyaoxu.github.io/post/lnmp-with-docker-on-mac/">Lnmp-with-docker-on-Mac</a>
+    </h2>
+    <div class="post-item post-meta">
+        <span><i class="iconfont icon-today-sharp"></i>&nbsp;2020-09-09</span><span><i class="iconfont icon-file-tray-sharp"></i>&nbsp;220 words</span><span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href="/tags/github">github</a>&nbsp;<a href="/tags/hugo">hugo</a>&nbsp;</span>
+
+    </div>
+    
+    
+    <div class="post-content markdown-body">
+        <p>Lnmp-with-docker-on-Mac</p>
+<pre><code class="language-bash">
+$ docker images
+$ docker pull ubuntu	# 拉取镜像
+$ docker run -tid -p 8080:80 -p 3309:3306 -v ~/www:/var/www/html --name mylnmp ubuntu /bin/bash	# 端口映射、目录映射
+
+$ docker exec -ti mylnmp /bin/bash	# 进入容器
+
+# 进入容器后
+
+$ apt update 
+$ apt upgrade
+$ apt -y install nginx php-fpm mysql-client mysql-server vim
+
+# 配置 PHP-FPM
+
+$ vim /etc/php/7.4/fpm/pool.d/www.conf
+
+
+# cp /run/php/php7.4-fpm.sock
+
+
+$ vim /etc/nginx/sites-enabled/default
+
+
+# 替换 fastcgi_pass 
+
+# 修改后的
+
+        # pass PHP scripts to FastCGI server
+        #
+        location ~ \.php$ {
+               include snippets/fastcgi-php.conf;
+        #
+        #       # With php-fpm (or other unix sockets):
+                fastcgi_pass unix:/run/php/php7.4-fpm.sock;
+        #       # With php-cgi (or other tcp sockets):
+        #       fastcgi_pass 127.0.0.1:9000;
+        }
+### 配置 MySQL
+
+# 通过 mysql_secure_installation 完成设置
+# 8.0 以后执行
+
+$ mysql &gt; set global validate_password.policy=0;
+$ mysql &gt; set global validate_password.length=4;
+
+
+$ mysql &gt;  grant all on *.* to 'root'@'localhost';  	# 授权
+
+$ mysql &gt;  update user set user.host='%' where user.user='root';	
+
+
+# 服务端设置
+$ vim /etc/mysql/mysql.conf.d/mysqld.cnf
+
+# 开启外部链接
+
+bind-address            = 127.0.0.1
+
+-&gt; 
+
+# bind-address            = 127.0.0.1
+
+# 运行设置
+
+$ usermod -d /var/lib/mysql mysql
+$ chown -R mysql:mysql /var/lib/mysql
+
+
+
+
+
+
+</code></pre>
+<h3 id="links">Links</h3>
+<ul>
+<li><a href="http://chungwei.github.io/2016/04/25/blog-hugo-github/">http://chungwei.github.io/2016/04/25/blog-hugo-github/</a></li>
+</ul>
+    </div>
+</article>
+
+
+<div class="license markdown-body">
+    <blockquote>
+        <p>Unless otherwise noted, the content of this site is licensed under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+               target="_blank">CC BY-NC-SA 4.0</a>.</p>
+    </blockquote>
+</div>
+
+
+
+            </div>
+            <aside class="col-12 col-md-3 float-left sidebar">
+    
+    <div class="sidebar-item sidebar-pages">
+        <h3>Pages</h3>
+        <ul>
+            
+            <li>
+                <a href="/">Home</a>
+            </li>
+            
+            <li>
+                <a href="/archives/">Archives</a>
+            </li>
+            
+            <li>
+                <a href="/about/">About</a>
+            </li>
+            
+            <li>
+                <a href="/search/">Search</a>
+            </li>
+            
+            <li>
+                <a href="/index.xml">RSS</a>
+            </li>
+            
+        </ul>
+    </div>
+    
+    <div class="sidebar-item sidebar-tags">
+        <h3>Tags</h3>
+        <div>
+            
+            <span>
+                <a href="/tags/cjk/">cjk</a>
+            </span>
+            
+            <span>
+                <a href="/tags/css/">css</a>
+            </span>
+            
+            <span>
+                <a href="/tags/emoji/">emoji</a>
+            </span>
+            
+            <span>
+                <a href="/tags/github/">github</a>
+            </span>
+            
+            <span>
+                <a href="/tags/html/">html</a>
+            </span>
+            
+            <span>
+                <a href="/tags/hugo/">hugo</a>
+            </span>
+            
+            <span>
+                <a href="/tags/markdown/">markdown</a>
+            </span>
+            
+            <span>
+                <a href="/tags/test/">test</a>
+            </span>
+            
+            <span>
+                <a href="/tags/text/">text</a>
+            </span>
+            
+            <span>
+                <a href="/tags/themes/">themes</a>
+            </span>
+            
+            <span>
+                <a href="/tags/wtf/">wtf</a>
+            </span>
+            
+        </div>
+    </div>
+    
+    <div class="sidebar-item sidebar-links">
+        <h3>Links</h3>
+        <ul>
+            
+            <li>
+                <a href="https://github.com/" target="_blank"><span>GitHub</span></a>
+            </li>
+            
+            <li>
+                <a href="https://twitter.com/" target="_blank"><span>Twitter</span></a>
+            </li>
+            
+            <li>
+                <a href="https://space.bilibili.com/" target="_blank"><span>bilibili</span></a>
+            </li>
+            
+        </ul>
+    </div>
+    
+    
+    
+    <div class="sidebar-item sidebar-toc">
+        <h3>TOC</h3>
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#links">Links</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+    
+    
+</aside>
+        </div>
+        <div class="btn">
+    <div class="btn-toggle-mode">
+        <i class="iconfont icon-contrast-sharp"></i>
+    </div>
+    <div class="btn-scroll-top">
+        <i class="iconfont icon-chevron-up-circle-sharp"></i>
+    </div>
+</div>
+    </main>
+
+    <footer>
+    <div class="container-lg clearfix">
+        <div class="col-12 footer">
+            <span>&copy; 2020 <a href="https://wangyaoxu.github.io">DSRKafuU</a> |
+                Powered by <a href="https://github.com/amzrk2/hugo-theme-fuji/"
+                   target="_blank">Fuji-v2</a> & <a href="https://gohugo.io/"
+                   target="_blank">Hugo</a> </span>
+        </div>
+    </div>
+</footer>
+    
+<script defer src="https://cdn.jsdelivr.net/combine/npm/medium-zoom@1.0.6,npm/lazysizes@5.2.2"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.21.0/components/prism-core.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+
+
+<script defer src="/assets/js/fuji.min.js"></script>
+
+
+</body>
+
+</html>
